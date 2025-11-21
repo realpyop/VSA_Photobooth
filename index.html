@@ -4,11 +4,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./styles.css" />
-    <title>VSA Cafe Shop</title>
+    <title>VSA Cafe Shop Photobooth</title>
   </head>
   <body>
-    <main>
+    <main class="start-page">
+      <div class="background-grid"></div>
+      
+      <div class="content-container">
+        <div class="title-section">
+          <h1 class="welcome-text">Welcome to the</h1>
+          <h2 class="main-title">
+            <span class="cafe-text">CAFE SHOP</span>
+            <span class="photobooth-text">PHOTOBOOTH</span>
+          </h2>
+        </div>
+        
+        <div class="decorative-elements">
+          <div class="star star-1">✦</div>
+          <div class="star star-2">✧</div>
+          <div class="star star-3">✦</div>
+        </div>
+        
+        <div class="polaroid-frame">
+          <div class="polaroid-inner"></div>
+        </div>
+        
+        <button class="start-button" onclick="startPhotobooth()">
+          CLICK HERE<br>TO START
+        </button>
+                
+      </div>
     </main>
+    
     <script src="./scripts.js" charset="UTF-8"></script>
   </body>
 </html>
