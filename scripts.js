@@ -15,9 +15,8 @@ function startPhotobooth() {
 
 
 // Countdown
-// Countdown
 function startCountdown() {
-    let count = 5;  // Keep as 5
+    let count = 5;
     const countdownNumber = document.getElementById('countdownNumber');
     const countdownText = document.getElementById('countdownText');
     const countdownRing = document.getElementById('countdownRing');
@@ -35,13 +34,11 @@ function startCountdown() {
     countdownRing.style.strokeDashoffset = circumference;
 
     const countdownInterval = setInterval(() => {
-        // Fix progress calculation for 5-second countdown
-        const progress = (6 - count) / 5;  // Back to (6 - count) / 5
+        const progress = (6 - count) / 5;
         countdownRing.style.strokeDashoffset = circumference - (progress * circumference);
 
         if (count > 0) {
             countdownNumber.textContent = count;
-            // Keep the number centered during scale animation
             countdownNumber.style.transform = 'translate(-50%, -50%) scale(1.2)';
             
             setTimeout(() => {
@@ -73,9 +70,33 @@ function startCountdown() {
 }
 
 
-// Initilizze camera preview
+// Initilize camera preview
 function initializeCamera() {
+    const video = document.getElementById('cameraVideo');
+    if (!video){
+        return;
+    }
 
+    const constraints = {
+        video : {
+            facingMode: 'user',
+            width: {ideal: 1280, max: 1920},
+            height: {ideal: 720, max: 1080}
+        }
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints)
+    .then(stream => {
+        video.srcObject = stream;
+        video.play();
+
+        window.currentStream = stream;
+    })
+    .catch(err => {
+        console.error('Error accessing camera:', err);
+        document.querySelector('.camera-preview').innerHTML =
+            '<div class="camera-error">Camera not available<br>Please alllow camera to load<div>'
+    })
 }
 
 
