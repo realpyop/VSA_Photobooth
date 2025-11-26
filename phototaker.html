@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Booth</title>
+    <link rel="stylesheet" href="phototaker.css">
+</head>
+<body>
+    <h1> Direction: you have 5 seconds for each photos </h1> 
+    
+    <div class="container">
+        <div class="setup-section" id="setupSection">
+            <label for="photoCount">How many photos do you want to take?</label>
+            <select id="photoCount">
+                <option value="4">4 Photos</option>
+                <option value="5">5 Photos</option>
+                <option value="6">6 Photos</option>
+                <option value="7">7 Photos</option>
+                <option value="8">8 Photos</option>
+            </select> 
+        </div>
+
+        <div class="progress-info" id="progressInfo" style="display: none;">
+            Photo <span id="currentCount">0</span> of <span id="totalCount">4</span>
+        </div>
+
+        <div class="camera-section" id="cameraSection">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="photoCanvas"></canvas>
+            <div class="countdown-overlay" id="countdown"></div>
+            <div id="placeholder" class="placeholder">
+                <p> Click "Start Photo Session" to begin</p>
+            </div>
+        </div>
+
+        <div class="photo-grid" id="photoGrid"></div>
+
+        <div class="controls">
+            <button id="startBtn" class="btn-primary" onclick="startSession()">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Start Photo Session
+            </button>
+            <button id="retakeBtn" class="btn-secondary" onclick="retakeSession()" style="display: none;">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Retake All
+            </button>
+            <button id="downloadBtn" class="btn-success" onclick="downloadAllPhotos()" style="display: none;">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Download All
+            </button>
+        </div>
+
+        <div class="frames-section" id="framesSection" style="display: none;">
+            <div class="layout-section">
+            <!--  <h3>Choose Layout Style:</h3>
+                <div class="layout-options" id="layoutOptions"></div>-->
+            </div>
+            
+            <h3>Choose Frame Style:</h3>
+            <div class="frame-options" id="frameOptions">
+
+            </div>
+        </div>
+    </div>
+
+    <script src="phototaker.js"></script>
+</body>
+</html>
