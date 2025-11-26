@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../styles.css" />
+    <title>Choose a Frame: VSA Photobooth</title>
+  </head>
+  <body>
+    <main class="frames-page">
+      <div class="background-grid"></div>
+
+      <div class="frames-container">
+        <h1 class="frames-title">PICK A THEME</h1>
+
+        <div id="themeSelection" class="theme-selection">
+          <div class="theme-grid">
+            <div class="theme-card" data-theme="cafe" onclick="selectTheme('cafe')">
+              <img src="../assets/frames/cafebig1.svg" alt="Cafe theme preview" />
+              <div class="theme-label">Cafe Style</div>
+            </div>
+
+            <div class="theme-card" data-theme="christmas" onclick="selectTheme('christmas')">
+              <img src="../assets/frames/christmasbig1.svg" alt="Christmas theme preview" />
+              <div class="theme-label">Christmas Style</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="variantSelection" class="variant-selection" hidden>
+          <h2 id="variantTitle" class="frames-subtitle">Choose a type</h2>
+          <p class="frames-instruction">Select one of the two designs for the theme you picked!</p>
+
+          <div class="frame-grid" id="variantGrid">
+          </div>
+
+          <div class="frames-actions">
+            <button class="back-button" onclick="backToThemes()">Back</button>
+            <button id="useFrameBtn" class="use-button" onclick="confirmFrameSelection()" disabled>Use This Frame</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <script src="../scripts.js"></script>
+    <script>
+      // Initialize the theme selection page
+      document.addEventListener('DOMContentLoaded', () => {
+        const selected = sessionStorage.getItem('selectedFrame');
+        if (selected) {
+          const mapping = getFrameMetadata();
+          // Finds theme in which the selected frame belongs
+          let selectedTheme = null;
+          for (const t of Object.keys(mapping)) {
+            if (mapping[t].some(f => f.id === selected)) selectedTheme = t;
+          }
+
+          if (selectedTheme) {
+            selectTheme(selectedTheme, /*skipScroll*/ true);
+            // After selection, mark the selected frame
+            setTimeout(() => {
+              const card = document.querySelector(`.frame-card[data-frame-id="${selected}"]`);
+              if (card) card.classList.add('selected');
+              const btn = document.getElementById('useFrameBtn'); if (btn) btn.disabled = false;
+            }, 50);
+          }
+        }
+      });
+
+    </script>
+  </body>
+</html>
