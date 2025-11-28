@@ -103,7 +103,8 @@ function initializeCamera() {
 
 // Capture photo
 function capturePhoto() {
-
+    const video = document.getElementById('cameraVideo');
+    const cameraPreview = document.querySelector('.camere-preview');
 }
 
 // Frame selection logic

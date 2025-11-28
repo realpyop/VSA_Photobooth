@@ -1,41 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./styles.css" />
-    <title>VSA Cafe Shop Photobooth</title>
-  </head>
-  <body>
-    <main class="start-page">
-      <div class="background-grid"></div>
-      
-      <div class="content-container">
-        <div class="title-section">
-          <h1 class="welcome-text">Welcome to the</h1>
-          <h2 class="main-title">
-            <span class="cafe-text">CAFE SHOP</span>
-            <span class="photobooth-text">PHOTOBOOTH</span>
-          </h2>
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Booth - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url("Welcome\ to\ VSA\ PhotoBoot.png");
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-size: cover;        /* makes the image fill the screen */
+            background-position: center;   /* keeps subject centered */
+            background-repeat: no-repeat;  /* prevents tiling */
+            background-attachment: fixed;
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+            animation: fadeIn 1s ease-in;
+        }
+
+        h1 {
+            font-family: 'Baloo 2', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 
+            4px 4px 0 #8b7355,
+            -2px -2px 0 #8b7355,
+            2px -2px 0 #8b7355,
+            -2px 2px 0 #8b7355,
+            6px 6px 20px rgba(0,0,0,0.15);
+            margin-bottom: 3rem;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-family: 'Baloo 2', cursive;
+            font-size: clamp(0.8rem, 5vw, 2rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 
+            4px 4px 0 #8b7355,
+            -2px -2px 0 #8b7355,
+            2px -2px 0 #8b7355,
+            -2px 2px 0 #8b7355,
+            6px 6px 20px rgba(0,0,0,0.15);
+            margin-bottom: 3rem;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .start-button {
+            padding: 20px 60px;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            background:brown;
+            border: 3px solid white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideUp 1.2s ease-out;
+        }
+
+        .start-button:hover {
+            background: white;
+            color:lightcoral;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+            50% {
+                transform: translate(0, -100px) scale(1);
+            }
+            75% {
+                transform: translate(-50px, -50px) scale(0.9);
+            }
+        }
+
+        .features {
+            margin-top: 50px;
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 1.5s ease-in;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to Cafe's Photobooth</h1>
+        <p class="subtitle">Let's make some memories together!</p>
         
-        <div class="decorative-elements">
-          <div class="star star-1">✦</div>
-          <div class="star star-2">✧</div>
-          <div class="star star-3">✦</div>
+        <a href="phototaker.html" class="start-button">Start Photo Booth</a>
         </div>
-        
-        <div class="polaroid-frame">
-          <div class="polaroid-inner"></div>
-        </div>
-        
-        <button class="start-button" onclick="startPhotobooth()">
-          CLICK HERE<br>TO START
-        </button>
-                
-      </div>
-    </main>
-    
-    <script src="./scripts.js" charset="UTF-8"></script>
-  </body>
+    </div>
+
+    <script>
+        // Add click animation
+        const button = document.querySelector('.start-button');
+        button.addEventListener('click', function(e) {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 100);
+        });
+    </script>
+</body>
 </html>
