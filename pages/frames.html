@@ -3,70 +3,372 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="../styles.css" />
-    <title>Choose a Frame: VSA Photobooth</title>
+    <link rel="stylesheet" href="../phototaker.css" />
+    <title>Select Photos & Frame: VSA Photobooth</title>
   </head>
   <body>
-    <main class="frames-page">
-      <div class="background-grid"></div>
+    <h1>SELECT YOUR PHOTOS</h1>
 
-      <div class="frames-container">
-        <h1 class="frames-title">PICK A THEME</h1>
-
-        <div id="themeSelection" class="theme-selection">
-          <div class="theme-grid">
-            <div class="theme-card" data-theme="cafe" onclick="selectTheme('cafe')">
-              <img src="../assets/frames/cafebig1.svg" alt="Cafe theme preview" />
-              <div class="theme-label">Cafe Style</div>
-            </div>
-
-            <div class="theme-card" data-theme="christmas" onclick="selectTheme('christmas')">
-              <img src="../assets/frames/christmasbig1.svg" alt="Christmas theme preview" />
-              <div class="theme-label">Christmas Style</div>
-            </div>
-          </div>
+    <div class="container">
+      <!-- Photo Selection Section -->
+      <div id="photoSelection" class="photo-selection">
+        <div class="setup-section">
+          <label>Pick 4 photos you want to frame:</label>
+          <p style="color: #666; font-size: 14px; margin-bottom: 20px;">
+            Selected: <span id="selectedCount">0</span>/4
+          </p>
+        </div>
+        
+        <div class="photo-grid active" id="photosGrid">
+          <!-- Photos will be populated by JavaScript -->
         </div>
 
-        <div id="variantSelection" class="variant-selection" hidden>
-          <h2 id="variantTitle" class="frames-subtitle">Choose a type</h2>
-          <p class="frames-instruction">Select one of the two designs for the theme you picked!</p>
-
-          <div class="frame-grid" id="variantGrid">
-          </div>
-
-          <div class="frames-actions">
-            <button class="back-button" onclick="backToThemes()">Back</button>
-            <button id="useFrameBtn" class="use-button" onclick="confirmFrameSelection()" disabled>Use This Frame</button>
-          </div>
+        <div class="controls">
+          <button class="btn-primary" id="continueBtn" onclick="proceedToFrames()" disabled>
+            Continue to Frame Selection
+          </button>
         </div>
-
       </div>
-    </main>
+
+      <!-- Frame Selection Section -->
+      <div id="frameSelection" class="frame-selection" style="display: none;">
+        <div class="setup-section">
+          <label>PICK A THEME</label>
+        </div>
+        
+        <div id="themeSelection" class="theme-selection">
+          <div class="layout-options">
+            <div class="layout-option theme-card" data-theme="cafe" onclick="selectTheme('cafe')">
+              <div class="layout-preview">
+                <img src="../assets/frames/cafebig1.svg" alt="Cafe theme preview" style="width: 100%; height: 100%; object-fit: contain;" />
+              </div>
+              <div class="layout-name">Cafe Style</div>
+            </div>
+
+            <div class="layout-option theme-card" data-theme="christmas" onclick="selectTheme('christmas')">
+              <div class="layout-preview">
+                <img src="../assets/frames/christmasbig1.svg" alt="Christmas theme preview" style="width: 100%; height: 100%; object-fit: contain;" />
+              </div>
+              <div class="layout-name">Christmas Style</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="variantSelection" class="variant-selection" style="display: none;">
+          <div class="setup-section">
+            <label id="variantTitle">Choose a type</label>
+            <p style="color: #666; font-size: 14px;">Select one of the two designs for the theme you picked!</p>
+          </div>
+
+          <div class="layout-options" id="variantGrid">
+            <!-- Variants will be populated by JavaScript -->
+          </div>
+
+          <div class="controls">
+            <button class="btn-secondary" onclick="backToThemes()">Back</button>
+            <button id="useFrameBtn" class="btn-success" onclick="confirmFrameSelection()" disabled>Apply Frame to Photos</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Result Section -->
+      <div id="finalResult" class="final-result" style="display: none;">
+        <div class="setup-section">
+          <label>YOUR FRAMED PHOTOS</label>
+        </div>
+        
+        <div class="photo-grid active" id="finalPhotosGrid">
+          <!-- Final framed photos will be shown here -->
+        </div>
+
+        <div class="controls">
+          <button class="btn-secondary" onclick="startOver()">Start Over</button>
+          <button class="btn-success" onclick="downloadAllFramedPhotos()">Download All Photos</button>
+        </div>
+      </div>
+    </div>
 
     <script src="../scripts.js"></script>
     <script>
-      // Initialize the theme selection page
-      document.addEventListener('DOMContentLoaded', () => {
-        const selected = sessionStorage.getItem('selectedFrame');
-        if (selected) {
-          const mapping = getFrameMetadata();
-          // Finds theme in which the selected frame belongs
-          let selectedTheme = null;
-          for (const t of Object.keys(mapping)) {
-            if (mapping[t].some(f => f.id === selected)) selectedTheme = t;
-          }
+      let selectedPhotoIndices = [];
+      let photos = [];
+      const maxSelection = 4;
 
-          if (selectedTheme) {
-            selectTheme(selectedTheme, /*skipScroll*/ true);
-            // After selection, mark the selected frame
-            setTimeout(() => {
-              const card = document.querySelector(`.frame-card[data-frame-id="${selected}"]`);
-              if (card) card.classList.add('selected');
-              const btn = document.getElementById('useFrameBtn'); if (btn) btn.disabled = false;
-            }, 50);
-          }
+      // Initialize the photo selection page
+      document.addEventListener('DOMContentLoaded', () => {
+        // Load photos from sessionStorage
+        const photosData = sessionStorage.getItem('photosData');
+        if (photosData) {
+          photos = JSON.parse(photosData);
+          displayPhotosForSelection();
         }
       });
+
+      function displayPhotosForSelection() {
+        const photosGrid = document.getElementById('photosGrid');
+        photosGrid.innerHTML = '';
+
+        photos.forEach((photoData, index) => {
+          const photoItem = document.createElement('div');
+          photoItem.className = 'photo-item';
+          photoItem.onclick = () => togglePhotoSelection(index);
+          
+          const photoWithFrame = document.createElement('div');
+          photoWithFrame.className = 'photo-with-frame';
+          
+          const img = document.createElement('img');
+          img.src = photoData;
+          img.alt = `Photo ${index + 1}`;
+          
+          const photoNumber = document.createElement('div');
+          photoNumber.className = 'photo-number';
+          photoNumber.textContent = index + 1;
+          photoNumber.style.cssText = `
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(139, 115, 85, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 14px;
+          `;
+          
+          const selectionIndicator = document.createElement('div');
+          selectionIndicator.className = 'selection-indicator';
+          selectionIndicator.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: none;
+          `;
+          selectionIndicator.textContent = '✓ Selected';
+          
+          photoWithFrame.appendChild(img);
+          photoWithFrame.appendChild(photoNumber);
+          photoWithFrame.appendChild(selectionIndicator);
+          photoItem.appendChild(photoWithFrame);
+          photosGrid.appendChild(photoItem);
+        });
+      }
+
+      function togglePhotoSelection(index) {
+        const photoItem = document.querySelectorAll('.photo-item')[index];
+        const selectionIndicator = photoItem.querySelector('.selection-indicator');
+        
+        if (selectedPhotoIndices.includes(index)) {
+          // Deselect photo
+          selectedPhotoIndices = selectedPhotoIndices.filter(i => i !== index);
+          photoItem.style.border = 'none';
+          photoItem.style.transform = 'scale(1)';
+          selectionIndicator.style.display = 'none';
+        } else {
+          // Select photo (if under limit)
+          if (selectedPhotoIndices.length < maxSelection) {
+            selectedPhotoIndices.push(index);
+            photoItem.style.border = '4px solid #667eea';
+            photoItem.style.transform = 'scale(1.02)';
+            photoItem.style.borderRadius = '12px';
+            selectionIndicator.style.display = 'block';
+          } else {
+            alert(`You can only select ${maxSelection} photos.`);
+            return;
+          }
+        }
+        
+        updateSelectionCount();
+      }
+
+      function updateSelectionCount() {
+        document.getElementById('selectedCount').textContent = selectedPhotoIndices.length;
+        document.getElementById('continueBtn').disabled = selectedPhotoIndices.length !== maxSelection;
+      }
+
+      function proceedToFrames() {
+        if (selectedPhotoIndices.length !== maxSelection) {
+          alert(`Please select exactly ${maxSelection} photos.`);
+          return;
+        }
+        
+        document.getElementById('photoSelection').style.display = 'none';
+        document.getElementById('frameSelection').style.display = 'block';
+        
+        // Change title
+        document.querySelector('h1').textContent = 'PICK A THEME';
+      }
+
+      // Use existing frame selection functions from scripts.js
+      function selectTheme(theme) {
+        // Remove active from all options
+        document.querySelectorAll('.layout-option').forEach(option => {
+          option.classList.remove('active');
+        });
+        
+        // Add active to selected
+        document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+        
+        const data = getFrameMetadata();
+        const variants = data[theme] || [];
+        const variantGrid = document.getElementById('variantGrid');
+        const variantTitle = document.getElementById('variantTitle');
+        const themeSection = document.getElementById('themeSelection');
+        const variantSection = document.getElementById('variantSelection');
+
+        if (!variantGrid || !variantTitle || !themeSection || !variantSection) return;
+
+        // Set title
+        variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Christmas - Pick a Design';
+        variantGrid.innerHTML = '';
+
+        // Build variant options
+        variants.forEach(v => {
+          const option = document.createElement('div');
+          option.className = 'layout-option frame-card';
+          option.setAttribute('data-frame-id', v.id);
+          option.onclick = () => selectFrame(v.id);
+
+          const preview = document.createElement('div');
+          preview.className = 'layout-preview';
+          
+          const img = document.createElement('img');
+          img.src = v.file;
+          img.alt = v.label;
+          img.style.cssText = 'width: 100%; height: 100%; object-fit: contain;';
+          
+          const label = document.createElement('div');
+          label.className = 'layout-name';
+          label.textContent = v.label;
+
+          preview.appendChild(img);
+          option.appendChild(preview);
+          option.appendChild(label);
+          variantGrid.appendChild(option);
+        });
+
+        // Show variant selection
+        themeSection.style.display = 'none';
+        variantSection.style.display = 'block';
+        
+        // Reset selection
+        document.getElementById('useFrameBtn').disabled = true;
+      }
+
+      function selectFrame(frameId) {
+        // Remove selection from all
+        document.querySelectorAll('.frame-card').forEach(card => {
+          card.classList.remove('active');
+        });
+        
+        // Add selection to clicked
+        document.querySelector(`[data-frame-id="${frameId}"]`).classList.add('active');
+        
+        // Enable button
+        document.getElementById('useFrameBtn').disabled = false;
+      }
+
+      function backToThemes() {
+        document.getElementById('variantSelection').style.display = 'none';
+        document.getElementById('themeSelection').style.display = 'block';
+        document.getElementById('useFrameBtn').disabled = true;
+      }
+
+      function confirmFrameSelection() {
+        const selectedFrameCard = document.querySelector('.frame-card.active');
+        if (!selectedFrameCard) {
+          alert('Please select a frame.');
+          return;
+        }
+
+        const frameId = selectedFrameCard.getAttribute('data-frame-id');
+        applyFrameToSelectedPhotos(frameId);
+      }
+
+      function applyFrameToSelectedPhotos(frameId) {
+        const framedPhotos = [];
+        let processedCount = 0;
+        
+        selectedPhotoIndices.forEach((photoIndex, i) => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          const img = new Image();
+          img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // Draw photo
+            ctx.drawImage(img, 0, 0);
+            
+            // TODO: Apply actual SVG frame here
+            // For now, just store the photo
+            const framedPhotoData = canvas.toDataURL('image/png');
+            framedPhotos[i] = framedPhotoData;
+            
+            processedCount++;
+            if (processedCount === selectedPhotoIndices.length) {
+              showFinalResult(framedPhotos);
+            }
+          };
+          img.src = photos[photoIndex];
+        });
+      }
+
+      function showFinalResult(framedPhotos) {
+        document.getElementById('frameSelection').style.display = 'none';
+        document.getElementById('finalResult').style.display = 'block';
+        
+        // Change title
+        document.querySelector('h1').textContent = 'YOUR FRAMED PHOTOS';
+        
+        const finalGrid = document.getElementById('finalPhotosGrid');
+        finalGrid.innerHTML = '';
+        
+        framedPhotos.forEach((photoData, index) => {
+          const photoItem = document.createElement('div');
+          photoItem.className = 'photo-item';
+          
+          const photoWithFrame = document.createElement('div');
+          photoWithFrame.className = 'photo-with-frame';
+          
+          const img = document.createElement('img');
+          img.src = photoData;
+          img.alt = `Framed Photo ${index + 1}`;
+          
+          photoWithFrame.appendChild(img);
+          photoItem.appendChild(photoWithFrame);
+          finalGrid.appendChild(photoItem);
+        });
+        
+        // Store for download
+        sessionStorage.setItem('finalFramedPhotos', JSON.stringify(framedPhotos));
+      }
+
+      function downloadAllFramedPhotos() {
+        const framedPhotos = JSON.parse(sessionStorage.getItem('finalFramedPhotos') || '[]');
+        
+        framedPhotos.forEach((photoData, index) => {
+          const link = document.createElement('a');
+          link.download = `framed-photo-${index + 1}-${Date.now()}.png`;
+          link.href = photoData;
+          link.click();
+          
+          // Small delay between downloads
+          setTimeout(() => {}, 100 * index);
+        });
+      }
+
+      function startOver() {
+        // Clear session storage and go back to start
+        sessionStorage.clear();
+        window.location.href = '../phototaker.html';
+      }
 
     </script>
   </body>
