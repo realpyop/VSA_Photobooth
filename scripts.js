@@ -96,7 +96,7 @@ function initializeCamera() {
     .catch(err => {
         console.error('Error accessing camera:', err);
         document.querySelector('.camera-preview').innerHTML =
-            '<div class="camera-error">Camera not available<br>Please alllow camera to load<div>'
+            '<div class="camera-error">Camera not available<br>Please allow camera to load<div>'
     })
 }
 
@@ -113,12 +113,16 @@ function capturePhoto() {
 function getFrameMetadata() {
     return {
         cafe: [
-            { id: 'cafebig1', file: '../assets/frames/cafebig1.svg', label: 'Cafe: Without Cat' },
-            { id: 'cafebig2', file: '../assets/frames/cafebig2.svg', label: 'Cafe: With Cat' }
+            { id: 'cafebig1', file: '/assets/frames/cafebig1.svg', label: 'Cafe: Without Cat', size: 'big' },
+            { id: 'cafebig2', file: '/assets/frames/cafebig2.svg', label: 'Cafe: With Cat', size: 'big' },
+            { id: 'cafesmall1', file: '/assets/frames/cafesmall1.svg', label: 'Cafe: Without Cat Ver. 2', size: 'small' },
+            { id: 'cafesmall2', file: '/assets/frames/cafesmall2.svg', label: 'Cafe: With Cat Ver. 2', size: 'small' }
         ],
         christmas: [
-            { id: 'christmasbig1', file: '../assets/frames/christmasbig1.svg', label: 'Christmas: Red Ver.' },
-            { id: 'christmasbig2', file: '../assets/frames/christmasbig2.svg', label: 'Christmas: Green Ver.' }
+            { id: 'christmasbig1', file: '/assets/frames/christmasbig1.svg', label: 'Christmas: Red Ver.', size: 'big' },
+            { id: 'christmasbig2', file: '/assets/frames/christmasbig2.svg', label: 'Christmas: Green Ver.', size: 'big' },
+            { id: 'christmassmall1', file: '/assets/frames/christmassmall1.svg', label: 'Christmas: Red Ver. 2', size: 'small' },
+            { id: 'christmassmall2', file: '/assets/frames/christmassmall2.svg', label: 'Christmas: Green Ver. 2', size: 'small' }
         ]
     };
 }
@@ -127,7 +131,7 @@ function getFrameMetadata() {
 function selectTheme(theme, skipScroll = false) {
     const data = getFrameMetadata();
     const variants = data[theme] || [];
-    const variantGrid = document.getElementById('variantGrid');
+        const variantGrid = document.getElementById('variantGrid');
     const variantTitle = document.getElementById('variantTitle');
     const themeSection = document.getElementById('themeSelection');
     const variantSection = document.getElementById('variantSelection');
@@ -146,7 +150,7 @@ function selectTheme(theme, skipScroll = false) {
         card.onclick = () => selectFrame(v.id);
 
         const img = document.createElement('img');
-        img.src = v.file;
+            img.src = v.file.replace('../assets', '/assets');
         img.alt = v.label;
         card.appendChild(img);
 

@@ -107,10 +107,11 @@ h1 {
 
 .frame-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    /* show four variants across on desktop */
+    grid-template-columns: repeat(4, 1fr);
     gap: 30px;
     margin-bottom: 25px;
-    max-width: 800px;
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -142,7 +143,7 @@ h1 {
 
 .frame-card img {
     width: 100%;
-    max-width: 200px;
+    max-width: 250px; /* match theme preview sizing for consistent formatting */
     height: auto;
     margin-bottom: 15px;
 }

@@ -193,6 +193,15 @@ video {
     flex-wrap: wrap;
 }
 
+#variantTitle {
+    text-align: center;
+    width: 100%;
+    display: block;
+    margin: 0 auto 20px auto;
+    font-size: 2rem; 
+    font-weight: 700;
+}
+
 button {
     padding: 12px 24px;
     font-size: 16px;
