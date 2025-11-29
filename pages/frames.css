@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-image: url("../phototaker.png");
+    background-image: url("../assets/bakground/phototaker.png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
