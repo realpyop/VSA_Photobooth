@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Your Photos: VSA Photobooth</title>
+    <link rel="stylesheet" href="../phototaker.css">
+    <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+    <main class="preview-page">
+        <div class="background-grid"></div>
+        <div class="preview-container">
+            <h1 class="preview-title">Preview Your Photos</h1>
+            <p class="preview-subtitle">Here's how your photos will look with your selected frame!</p>
+            <div id="photoPreviewGrid" class="photo-preview-grid">
+            </div>
+
+            <!-- Download section -->
+            <div class="download-section">
+                <h2>Save Your Photos</h2>
+                <p class="download-description">Click below to save your photobooth creation!</p>
+                <form id="downloadForm" class="download-form">
+                    <div class="download-input-group">
+                        <input 
+                            type="text" 
+                            id="nameInput" 
+                            placeholder="Enter your name (optional)"
+                            maxlength="50"
+                        >
+                        <button type="submit" class="download-button">
+                            📸 Download Photos
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Status messages will appear here -->
+                <div id="downloadStatus" class="download-status"></div>
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="preview-actions">
+                <button class="back-button" onclick="goBackToFrames()">
+                    Choose Different Frame
+                </button>
+                <button class="start-over-button" onclick="startOver()">
+                    Home
+                </button>
+            </div>
+        </div>
+    </main>
+    <script src="../scripts.js"></script>
+    <script src="preview.js"></script>
+</body>
+</html>

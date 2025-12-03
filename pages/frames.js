@@ -195,11 +195,35 @@ function confirmFrameSelection() {
         return;
     }
 
-    const id = selectedCard.getAttribute('data-frame-id');
-    sessionStorage.setItem('selectedFrame', id);
-
-    // Navigate to countdown page
-    window.location.href = './countdown.html';
+    const frameId = selectedCard.getAttribute('data-frame-id');
+    
+    // Get frame metadata to determine photo count based on frame size
+    const frameData = getFrameMetadata();
+    let selectedFrame = null;
+    let photoCount = 4; // default
+    
+    // Find the selected frame and get its photo count
+    for (const theme of Object.values(frameData)) {
+        for (const frame of theme) {
+            if (frame.id === frameId) {
+                selectedFrame = frame;
+                // "big" frames = 4 photos, "small" frames = 3 photos
+                photoCount = frame.size === 'big' ? 4 : 3;
+                break;
+            }
+        }
+        if (selectedFrame) break;
+    }
+    
+    // Store both frame ID and required photo count
+    sessionStorage.setItem('selectedFrame', frameId);
+    sessionStorage.setItem('photoCount', photoCount);
+    sessionStorage.setItem('frameLabel', selectedFrame?.label || 'Selected Frame');
+    
+    console.log(`Selected frame: ${frameId}, Photos needed: ${photoCount}`);
+    
+    // Navigate to photo taking
+    window.location.href = '../phototaker.html';
 }
 
 function goBack() {

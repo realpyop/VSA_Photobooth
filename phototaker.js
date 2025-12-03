@@ -5,6 +5,10 @@ var currentPhotoIndex = 0;
 var isCapturing = false;
 var selectedLayout = 'cafe';
 
+const requiredPhotos = parseInt(sessionStorage.getItem('photoCount')) || 4;
+const frameLabel = sessionStorage.getItem('frameLabel') || 'Selected Frame';
+var totalPhotos = requiredPhotos; // Update the global totalPhotos variable
+
 var layouts = [
     { id: 'cafe', name: 'Cafe Style', description: 'Checkered background' },
     { id: 'scrapbook', name: 'Scrapbook', description: 'With decorations' },
@@ -96,13 +100,17 @@ function initFrames() {
 }
 
 function startSession() {
-    totalPhotos = parseInt(document.getElementById('photoCount').value);
-    photos = [];
-    currentPhotoIndex = 0;
-    
-    document.getElementById('setupSection').style.display = 'none';
+    // Show progress info
     document.getElementById('progressInfo').style.display = 'block';
-    document.getElementById('totalCount').textContent = totalPhotos;
+    
+    // Hide the start button
+    var startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+        startBtn.style.display = 'none';
+    }
+    
+    // Update progress counter
+    updateProgressCounter();
     
     startCamera();
 }
@@ -117,15 +125,24 @@ function startCamera() {
         video.srcObject = mediaStream;
         video.style.display = 'block';
         
-        document.getElementById('placeholder').style.display = 'none';
-        document.getElementById('startBtn').disabled = true;
+        var placeholder = document.getElementById('placeholder');
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
         
         setTimeout(function() {
             startCountdown();
-        }, 1000);
+        }, 2000);
     })
     .catch(function(err) {
         alert('Camera access denied. Please allow camera permissions.');
+        
+        // Reset UI if camera fails
+        document.getElementById('progressInfo').style.display = 'none';
+        var startBtn = document.getElementById('startBtn');
+        if (startBtn) {
+            startBtn.style.display = 'block';
+        }
     });
 }
 
@@ -216,25 +233,12 @@ function capturePhoto() {
 function finishSession() {
     stopCamera();
     
-    // document.getElementById('video').style.display = 'none';
-    // document.getElementById('progressInfo').style.display = 'none';
-    // document.getElementById('cameraSection').style.display = 'none';
-    
-    // displayPhotos();
-    
-    // document.getElementById('startBtn').style.display = 'none';
-    // document.getElementById('retakeBtn').style.display = 'flex';
-    // document.getElementById('downloadBtn').style.display = 'flex';
-    // document.getElementById('framesSection').style.display = 'block';
-    
-    // initLayouts();
-    // initFrames();
-
-    // Store photos in sessionStorage then navigate to frames selection page
+    // Store photos in sessionStorage then navigate directly to preview
     sessionStorage.setItem('photosData', JSON.stringify(photos));
     sessionStorage.setItem('totalPhotos', photos.length.toString());
 
-    window.location.href = './pages/frames.html';
+    // Navigate directly to preview (frame already selected)
+    window.location.href = './pages/preview.html';
 }
 
 function displayPhotos() {
@@ -448,3 +452,94 @@ function createCollage(images, frameClass) {
 window.addEventListener('beforeunload', function() {
     stopCamera();
 });
+
+function updatePhotoTakerUI() {
+    // Update the title to show frame info  
+    const title = document.querySelector('h1');
+    if (title) {
+        title.innerHTML = `PHOTO BOOTH<br><small style="font-size: 0.6em; opacity: 0.8;">${frameLabel} - ${requiredPhotos} Photos</small>`;
+    }
+    
+    // Initialize progress counter
+    currentPhotoIndex = 0;
+    totalPhotos = requiredPhotos;
+    updateProgressCounter();
+}
+
+// Call this when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    updatePhotoTakerUI();
+});
+
+function updateProgressCounter() {
+    var currentCountEl = document.getElementById('currentCount');
+    var totalCountEl = document.getElementById('totalCount');
+    
+    if (currentCountEl) {
+        currentCountEl.textContent = currentPhotoIndex;
+    }
+    if (totalCountEl) {
+        totalCountEl.textContent = totalPhotos;
+    }
+}
+
+// Update the capturePhoto function to update progress
+function capturePhoto() {
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('photoCanvas');
+    
+    // Create flash effect
+    var flashOverlay = document.createElement('div');
+    flashOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: white;
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.1s ease-in-out;
+    `;
+    document.body.appendChild(flashOverlay);
+    
+    // Trigger flash
+    setTimeout(function() {
+        flashOverlay.style.opacity = '1';
+    }, 10);
+    
+    // Remove flash after brief moment
+    setTimeout(function() {
+        flashOverlay.style.opacity = '0';
+        setTimeout(function() {
+            document.body.removeChild(flashOverlay);
+        }, 100);
+    }, 150);
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    var ctx = canvas.getContext('2d');
+    
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0);
+    
+    var photoData = canvas.toDataURL('image/png');
+    photos.push(photoData);
+    
+    currentPhotoIndex++;
+    
+    // Update progress counter
+    updateProgressCounter();
+    
+    isCapturing = false;
+    
+    if (currentPhotoIndex < totalPhotos) {
+        setTimeout(function() {
+            startCountdown();
+        }, 2000);
+    } else {
+        finishSession();
+    }
+}
