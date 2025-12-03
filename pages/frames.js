@@ -125,7 +125,7 @@ function selectTheme(theme, skipScroll = false) {
 
     variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Christmas - Pick a Design';
     variantGrid.innerHTML = '';
-
+    
     variants.forEach(v => {
         const card = document.createElement('div');
         card.className = 'frame-card';
@@ -133,7 +133,8 @@ function selectTheme(theme, skipScroll = false) {
         card.onclick = () => selectFrame(v.id);
 
         const img = document.createElement('img');
-        img.src = v.file;
+        // Fix path - go up one level since we're in /pages/ directory
+        img.src = v.file.startsWith('/') ? '..' + v.file : '../' + v.file;
         img.alt = v.label;
         card.appendChild(img);
 
