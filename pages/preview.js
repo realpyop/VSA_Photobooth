@@ -199,7 +199,7 @@ function getPhotoSlotConfiguration(frameId) {
     }
 }
 
-// Updated frame composition function
+// Updated frame composition function with proper cropping for horizontal photos
 async function createFrameWithMultiplePhotos(ctx, photoImages, frameContent, canvasWidth, canvasHeight) {
     try {
         // Get photo slot configuration based on selected frame
@@ -215,17 +215,36 @@ async function createFrameWithMultiplePhotos(ctx, photoImages, frameContent, can
                 const slotWidth = slot.width * canvasWidth;
                 const slotHeight = slot.height * canvasHeight;
                 
-                // Fit square photo to HEIGHT of portrait slot
-                const photoSize = slotHeight;
-                const drawX = slotX + (slotWidth - photoSize) / 2;
-                const drawY = slotY;
+                // Calculate aspect ratios
+                const photoAspect = photo.width / photo.height;
+                const slotAspect = slotWidth / slotHeight;
                 
-                // Draw photo maintaining square aspect
+                let sourceX = 0;
+                let sourceY = 0;
+                let sourceWidth = photo.width;
+                let sourceHeight = photo.height;
+                
+                // Crop the photo to fit the slot (like object-fit: cover)
+                if (photoAspect > slotAspect) {
+                    // Photo is wider than slot - crop horizontally
+                    sourceWidth = photo.height * slotAspect;
+                    sourceX = (photo.width - sourceWidth) / 2;
+                } else {
+                    // Photo is taller than slot - crop vertically
+                    sourceHeight = photo.width / slotAspect;
+                    sourceY = (photo.height - sourceHeight) / 2;
+                }
+                
+                // Draw the cropped photo
                 ctx.save();
                 ctx.beginPath();
                 ctx.rect(slotX, slotY, slotWidth, slotHeight);
                 ctx.clip();
-                ctx.drawImage(photo, drawX, drawY, photoSize, photoSize);
+                ctx.drawImage(
+                    photo,
+                    sourceX, sourceY, sourceWidth, sourceHeight,  // Source crop
+                    slotX, slotY, slotWidth, slotHeight           // Destination
+                );
                 ctx.restore();
             }
         });

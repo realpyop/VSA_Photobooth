@@ -72,7 +72,12 @@ line-height: 1.2;
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 20px;
-    min-height: 400px;
+    /* Set a portrait aspect ratio container */
+    width: 100%;
+    max-width: 480px;
+    aspect-ratio: 3 / 4; /* Portrait ratio */
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,8 +85,9 @@ line-height: 1.2;
 
 video, #photoCanvas {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+    object-fit: cover; /* This crops the video to fill the container */
 }
 
 video {

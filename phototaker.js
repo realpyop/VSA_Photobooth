@@ -205,13 +205,42 @@ function capturePhoto() {
         }, 100);
     }, 150);
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Set portrait dimensions (3:4 aspect ratio)
+    var targetWidth = 480;
+    var targetHeight = 640;
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    
     var ctx = canvas.getContext('2d');
     
+    // Calculate crop area to match what's shown on screen
+    var videoAspect = video.videoWidth / video.videoHeight;
+    var targetAspect = targetWidth / targetHeight;
+    
+    var sourceWidth, sourceHeight, sourceX, sourceY;
+    
+    if (videoAspect > targetAspect) {
+        // Video is wider - crop sides
+        sourceHeight = video.videoHeight;
+        sourceWidth = sourceHeight * targetAspect;
+        sourceX = (video.videoWidth - sourceWidth) / 2;
+        sourceY = 0;
+    } else {
+        // Video is taller - crop top/bottom
+        sourceWidth = video.videoWidth;
+        sourceHeight = sourceWidth / targetAspect;
+        sourceX = 0;
+        sourceY = (video.videoHeight - sourceHeight) / 2;
+    }
+    
+    // Mirror and draw the cropped area
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0);
+    ctx.drawImage(
+        video,
+        sourceX, sourceY, sourceWidth, sourceHeight,  // Source crop area
+        0, 0, targetWidth, targetHeight               // Destination
+    );
     
     var photoData = canvas.toDataURL('image/png');
     photos.push(photoData);
@@ -517,13 +546,42 @@ function capturePhoto() {
         }, 100);
     }, 150);
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Set portrait dimensions (3:4 aspect ratio)
+    var targetWidth = 480;
+    var targetHeight = 640;
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    
     var ctx = canvas.getContext('2d');
     
+    // Calculate crop area to match what's shown on screen
+    var videoAspect = video.videoWidth / video.videoHeight;
+    var targetAspect = targetWidth / targetHeight;
+    
+    var sourceWidth, sourceHeight, sourceX, sourceY;
+    
+    if (videoAspect > targetAspect) {
+        // Video is wider - crop sides
+        sourceHeight = video.videoHeight;
+        sourceWidth = sourceHeight * targetAspect;
+        sourceX = (video.videoWidth - sourceWidth) / 2;
+        sourceY = 0;
+    } else {
+        // Video is taller - crop top/bottom
+        sourceWidth = video.videoWidth;
+        sourceHeight = sourceWidth / targetAspect;
+        sourceX = 0;
+        sourceY = (video.videoHeight - sourceHeight) / 2;
+    }
+    
+    // Mirror and draw the cropped area
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
-    ctx.drawImage(video, 0, 0);
+    ctx.drawImage(
+        video,
+        sourceX, sourceY, sourceWidth, sourceHeight,  // Source crop area
+        0, 0, targetWidth, targetHeight               // Destination
+    );
     
     var photoData = canvas.toDataURL('image/png');
     photos.push(photoData);
