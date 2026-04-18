@@ -85,14 +85,14 @@ async function createCompositeFrameWithAllPhotos(allPhotos, frameContent, contai
             // Create the main container for the composite
             const previewItem = document.createElement('div');
             previewItem.className = 'composite-frame-container';
-            previewItem.style.maxWidth = '600px';
+            previewItem.style.maxWidth = '380px';
             previewItem.style.margin = '0 auto';
             
             // Create canvas for the composite
             const canvas = document.createElement('canvas');
             canvas.className = 'composite-frame';
-            canvas.width = 800;  // Larger canvas for the composite
-            canvas.height = 800;
+            canvas.width = 576;
+            canvas.height = 864;
             canvas.style.width = '100%';
             canvas.style.height = 'auto';
             canvas.style.borderRadius = '15px';
@@ -128,64 +128,75 @@ async function createCompositeFrameWithAllPhotos(allPhotos, frameContent, contai
 // Get photo slot configuration for specific frame
 function getPhotoSlotConfiguration(frameId) {
     switch(frameId) {
-        case 'cafebig1':
+        // CAFE THEME
+        // case 'cafebig1':
+        //     return [
+        //         { x: 0.18, y: 0.05, width: 0.33, height: 0.4 },
+        //         { x: 0.49, y: 0.05, width: 0.33, height: 0.4 },
+        //         { x: 0.18, y: 0.47, width: 0.33, height: 0.4 },
+        //         { x: 0.49, y: 0.47, width: 0.33, height: 0.4 }
+        //     ];
+        // case 'cafebig2':
+        //     return [
+        //         { x: 0.18, y: 0.15, width: 0.29, height: 0.38 },
+        //         { x: 0.46, y: 0.15, width: 0.29, height: 0.38 },
+        //         { x: 0.18, y: 0.52, width: 0.29, height: 0.38 },
+        //         { x: 0.46, y: 0.52, width: 0.29, height: 0.38 }
+        //     ];
+        // case 'cafesmall1':
+        //     return [
+        //         { x: 0.19, y: 0.01, width: 0.27, height: 0.32 },
+        //         { x: 0.19, y: 0.33, width: 0.27, height: 0.32 },
+        //         { x: 0.19, y: 0.67, width: 0.27, height: 0.27 },
+        //     ];
+        // case 'cafesmall2':
+        //     return [
+        //         { x: 0.19, y: 0.06, width: 0.255, height: 0.29 },
+        //         { x: 0.19, y: 0.37, width: 0.255, height: 0.29 },
+        //         { x: 0.19, y: 0.67, width: 0.27, height: 0.27 },
+        //     ];
+
+        case 'arcadebig1': // blackarcadebig — 2x2 grid, 4 photos
             return [
-                { x: 0.18, y: 0.05, width: 0.33, height: 0.4 },   // Top-left
-                { x: 0.49, y: 0.05, width: 0.33, height: 0.4 },    // Top-right  
-                { x: 0.18, y: 0.47, width: 0.33, height: 0.4 },   // Bottom-left
-                { x: 0.49, y: 0.47, width: 0.33, height: 0.4 }     // Bottom-right
+                { x: 0.087, y: 0.037, width: 0.389, height: 0.399 },
+                { x: 0.550, y: 0.037, width: 0.361, height: 0.399 },
+                { x: 0.087, y: 0.477, width: 0.389, height: 0.374 },
+                { x: 0.550, y: 0.477, width: 0.361, height: 0.374 },
             ];
-            
-        case 'cafebig2':
+
+        case 'pixelgamebig': // 2x3 grid, 6 photos
             return [
-                { x: 0.18, y: 0.15, width: 0.29, height: 0.38 },    // Top-left - adjusted for cat decoration
-                { x: 0.46, y: 0.15, width: 0.29, height: 0.38 },    // Top-right
-                { x: 0.18, y: 0.52, width: 0.29, height: 0.38 },    // Bottom-left
-                { x: 0.46, y: 0.52, width: 0.29, height: 0.38 }     // Bottom-right
+                { x: 0.054, y: 0.032, width: 0.455, height: 0.264 },
+                { x: 0.528, y: 0.032, width: 0.398, height: 0.264 },
+                { x: 0.054, y: 0.356, width: 0.455, height: 0.270 },
+                { x: 0.528, y: 0.356, width: 0.398, height: 0.270 },
+                { x: 0.054, y: 0.686, width: 0.455, height: 0.233 },
+                { x: 0.528, y: 0.686, width: 0.398, height: 0.233 },
             ];
-            
-        case 'cafesmall1':
+
+        case 'bluearcade': // 2x3 grid tiled within cabinet screen
+        case 'pinkarcade':
             return [
-                { x: 0.19, y: 0.01, width: 0.27, height: 0.32 },    // 1
-                { x: 0.19, y: 0.33, width: 0.27, height: 0.32 },    // 2
-                { x: 0.19, y: 0.67, width: 0.27, height: 0.27 },    // 3
+                { x: 0.181, y: 0.097, width: 0.319, height: 0.215 },
+                { x: 0.500, y: 0.097, width: 0.318, height: 0.215 },
+                { x: 0.181, y: 0.312, width: 0.319, height: 0.215 },
+                { x: 0.500, y: 0.312, width: 0.318, height: 0.215 },
+                { x: 0.181, y: 0.527, width: 0.319, height: 0.216 },
+                { x: 0.500, y: 0.527, width: 0.318, height: 0.216 },
             ];
-            
-        case 'cafesmall2':
+
+        case 'arcadesmall1': // blackarcadesmall — single column, 3 photos
             return [
-                { x: 0.19, y: 0.06, width: 0.255, height: 0.29 },    // 1
-                { x: 0.19, y: 0.37, width: 0.255, height: 0.29 },    // 2
-                { x: 0.19, y: 0.67, width: 0.27, height: 0.27 },    // 3
+                { x: 0.047, y: 0.031, width: 0.455, height: 0.263 },
+                { x: 0.047, y: 0.328, width: 0.455, height: 0.264 },
+                { x: 0.047, y: 0.625, width: 0.455, height: 0.247 },
             ];
-            
-        case 'christmasbig1':
+
+        case 'arcadesmall2': // pixelgamesmall — single column, 3 photos
             return [
-                { x: 0.18, y: 0.14, width: 0.32, height: 0.38 },    // Top-left
-                { x: 0.50, y: 0.14, width: 0.32, height: 0.38 },    // Top-right
-                { x: 0.18, y: 0.52, width: 0.32, height: 0.38 },    // Bottom-left
-                { x: 0.50, y: 0.52, width: 0.32, height: 0.38 }     // Bottom-right
-            ];
-            
-        case 'christmasbig2':
-            return [
-                { x: 0.18, y: 0.14, width: 0.32, height: 0.38 },    // Top-left
-                { x: 0.50, y: 0.14, width: 0.32, height: 0.38 },    // Top-right
-                { x: 0.18, y: 0.52, width: 0.32, height: 0.38 },    // Bottom-left
-                { x: 0.50, y: 0.52, width: 0.32, height: 0.38 }     // Bottom-right
-            ];
-            
-        case 'christmassmall1':
-            return [
-                { x: 0.21, y: 0.11, width: 0.235, height: 0.28 },    // 1
-                { x: 0.21, y: 0.40, width: 0.235, height: 0.28 },    // 2
-                { x: 0.21, y: 0.7, width: 0.235, height: 0.25 },    // 3
-            ];
-            
-        case 'christmassmall2':
-            return [
-                { x: 0.21, y: 0.11, width: 0.235, height: 0.28 },    // 1
-                { x: 0.21, y: 0.40, width: 0.235, height: 0.28 },    // 2
-                { x: 0.21, y: 0.7, width: 0.235, height: 0.25 },    // 3
+                { x: 0.054, y: 0.081, width: 0.427, height: 0.209 },
+                { x: 0.054, y: 0.362, width: 0.427, height: 0.259 },
+                { x: 0.054, y: 0.689, width: 0.427, height: 0.230 },
             ];
             
         default:

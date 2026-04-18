@@ -112,17 +112,20 @@ function capturePhoto() {
 // Mapping to file locations and labels
 function getFrameMetadata() {
     return {
-        cafe: [
-            { id: 'cafebig1', file: '/assets/frames/cafebig1.svg', label: 'Cafe: Without Cat', size: 'big' },
-            { id: 'cafebig2', file: '/assets/frames/cafebig2.svg', label: 'Cafe: With Cat', size: 'big' },
-            { id: 'cafesmall1', file: '/assets/frames/cafesmall1.svg', label: 'Cafe: Without Cat Ver. 2', size: 'small' },
-            { id: 'cafesmall2', file: '/assets/frames/cafesmall2.svg', label: 'Cafe: With Cat Ver. 2', size: 'small' }
-        ],
-        christmas: [
-            { id: 'christmasbig1', file: '/assets/frames/christmasbig1.svg', label: 'Christmas: Red Ver.', size: 'big' },
-            { id: 'christmasbig2', file: '/assets/frames/christmasbig2.svg', label: 'Christmas: Green Ver.', size: 'big' },
-            { id: 'christmassmall1', file: '/assets/frames/christmassmall1.svg', label: 'Christmas: Red Ver. 2', size: 'small' },
-            { id: 'christmassmall2', file: '/assets/frames/christmassmall2.svg', label: 'Christmas: Green Ver. 2', size: 'small' }
+        // CAFE THEME
+        // cafe: [
+        //     { id: 'cafebig1', file: '/assets/cafe-themed-frames/cafebig1.svg', label: 'Cafe: Without Cat', size: 'big' },
+        //     { id: 'cafebig2', file: '/assets/cafe-themed-frames/cafebig2.svg', label: 'Cafe: With Cat', size: 'big' },
+        //     { id: 'cafesmall1', file: '/assets/cafe-themed-frames/cafesmall1.svg', label: 'Cafe: Without Cat Ver. 2', size: 'small' },
+        //     { id: 'cafesmall2', file: '/assets/cafe-themed-frames/cafesmall2.svg', label: 'Cafe: With Cat Ver. 2', size: 'small' }
+        // ],
+        arcade: [
+            { id: 'arcadebig1', file: '/assets/arcade-themed-frames/blackarcadebig.svg', label: 'Arcade: Black Ver.', size: 'big' },
+            { id: 'pixelgamebig', file: '/assets/arcade-themed-frames/pixelgamebig.svg', label: 'Arcade: Pixel Game (6)', size: 'big', photoCount: 6 },
+            { id: 'bluearcade', file: '/assets/arcade-themed-frames/bluearcade.svg', label: 'Arcade: Blue Cabinet', size: 'big', photoCount: 6 },
+            { id: 'pinkarcade', file: '/assets/arcade-themed-frames/pinkarcade.svg', label: 'Arcade: Pink Cabinet', size: 'big', photoCount: 6 },
+            { id: 'arcadesmall1', file: '/assets/arcade-themed-frames/blackarcadesmall.svg', label: 'Arcade: Black Small', size: 'small' },
+            { id: 'arcadesmall2', file: '/assets/arcade-themed-frames/pixelgamesmall.svg', label: 'Arcade: Pixel Game Small', size: 'small' }
         ]
     };
 }
@@ -139,7 +142,7 @@ function selectTheme(theme, skipScroll = false) {
     if (!variantGrid || !variantTitle || !themeSection || !variantSection) return;
 
     // Set title and the grid
-    variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Christmas - Pick a Design';
+    variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Arcade - Pick a Design';
     variantGrid.innerHTML = '';
 
     // Builds two cards

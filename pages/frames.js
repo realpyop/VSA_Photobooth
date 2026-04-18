@@ -123,7 +123,7 @@ function selectTheme(theme, skipScroll = false) {
 
     if (!variantGrid || !variantTitle || !themeSection || !variantSection) return;
 
-    variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Christmas - Pick a Design';
+    variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Arcade - Pick a Design';
     variantGrid.innerHTML = '';
     
     variants.forEach(v => {
@@ -209,7 +209,7 @@ function confirmFrameSelection() {
             if (frame.id === frameId) {
                 selectedFrame = frame;
                 // "big" frames = 4 photos, "small" frames = 3 photos
-                photoCount = frame.size === 'big' ? 4 : 3;
+                photoCount = frame.photoCount ?? (frame.size === 'big' ? 4 : frame.size === 'small' ? 3 : 1);
                 break;
             }
         }
