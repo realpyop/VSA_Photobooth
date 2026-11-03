@@ -126,6 +126,10 @@ function getFrameMetadata() {
             { id: 'pinkarcade', file: '/assets/arcade-themed-frames/pinkarcade.svg', label: 'Arcade: Pink Cabinet', size: 'big', photoCount: 6 },
             { id: 'arcadesmall1', file: '/assets/arcade-themed-frames/blackarcadesmall.svg', label: 'Arcade: Black Small', size: 'small' },
             { id: 'arcadesmall2', file: '/assets/arcade-themed-frames/pixelgamesmall.svg', label: 'Arcade: Pixel Game Small', size: 'small' }
+        ],
+        wedding: [
+            { id: 'weddingbigprint', file: '/assets/wedding-themed-frames/red traditional viet big print.svg', label: 'Wedding: Big Print', size: 'big', photoCount: 6 },
+            { id: 'weddingsinglestrip', file: '/assets/wedding-themed-frames/red traditional viet single strip.svg', label: 'Wedding: Single Strip', size: 'small', photoCount: 3 }
         ]
     };
 }
@@ -142,7 +146,8 @@ function selectTheme(theme, skipScroll = false) {
     if (!variantGrid || !variantTitle || !themeSection || !variantSection) return;
 
     // Set title and the grid
-    variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Arcade - Pick a Design';
+    const themeTitle = theme === 'cafe' ? 'Cafe' : theme === 'wedding' ? 'Wedding' : 'Arcade';
+    variantTitle.textContent = `${themeTitle} - Pick a Design`;
     variantGrid.innerHTML = '';
 
     // Builds two cards

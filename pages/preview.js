@@ -95,7 +95,8 @@ async function createCompositeFrameWithAllPhotos(allPhotos, frameContent, contai
             canvas.height = 864;
             canvas.style.width = '100%';
             canvas.style.height = 'auto';
-            canvas.style.borderRadius = '15px';
+            canvas.style.borderRadius =
+                ['weddingsinglestrip', 'weddingbigprint'].includes(selectedFrameId) ? '0' : '15px';
             
             const ctx = canvas.getContext('2d');
             
@@ -111,6 +112,10 @@ async function createCompositeFrameWithAllPhotos(allPhotos, frameContent, contai
                 // Fallback: create simple grid
                 await createSimplePhotoGrid(ctx, photoImages, canvas.width, canvas.height);
             }
+
+            if (selectedFrameId === 'weddingsinglestrip') {
+                centerCanvasArtworkHorizontally(canvas, ctx);
+            }
             
             // Add the canvas to container
             previewItem.appendChild(canvas);
@@ -123,6 +128,39 @@ async function createCompositeFrameWithAllPhotos(allPhotos, frameContent, contai
             resolve();
         }
     });
+}
+
+function centerCanvasArtworkHorizontally(canvas, ctx) {
+    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let minX = canvas.width;
+    let maxX = -1;
+
+    for (let y = 0; y < canvas.height; y++) {
+        for (let x = 0; x < canvas.width; x++) {
+            if (pixels[(y * canvas.width + x) * 4 + 3] > 0) {
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+            }
+        }
+    }
+
+    if (maxX < minX) return;
+
+    const artworkWidth = maxX - minX + 1;
+    const offsetX = Math.round((canvas.width - artworkWidth) / 2 - minX);
+    if (offsetX === 0) return;
+
+    const originalCanvas = document.createElement('canvas');
+    originalCanvas.width = canvas.width;
+    originalCanvas.height = canvas.height;
+    const originalContext = originalCanvas.getContext('2d');
+    if (!originalContext) {
+        throw new Error('Unable to center the photostrip preview.');
+    }
+    originalContext.drawImage(canvas, 0, 0);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(originalCanvas, offsetX, 0);
 }
 
 // Get photo slot configuration for specific frame
@@ -197,6 +235,23 @@ function getPhotoSlotConfiguration(frameId) {
                 { x: 0.054, y: 0.081, width: 0.427, height: 0.209 },
                 { x: 0.054, y: 0.362, width: 0.427, height: 0.259 },
                 { x: 0.054, y: 0.689, width: 0.427, height: 0.230 },
+            ];
+
+        case 'weddingbigprint': // 2x3 grid, 6 photos
+            return [
+                { x: 0.040, y: 0.025, width: 0.470, height: 0.265 },
+                { x: 0.525, y: 0.025, width: 0.470, height: 0.265 },
+                { x: 0.040, y: 0.295, width: 0.470, height: 0.265 },
+                { x: 0.525, y: 0.295, width: 0.470, height: 0.265 },
+                { x: 0.040, y: 0.565, width: 0.470, height: 0.265 },
+                { x: 0.525, y: 0.565, width: 0.470, height: 0.265 },
+            ];
+
+        case 'weddingsinglestrip': // single column, 3 photos
+            return [
+                { x: 0.045, y: 0.029, width: 0.470, height: 0.270 },
+                { x: 0.045, y: 0.325, width: 0.470, height: 0.270 },
+                { x: 0.045, y: 0.622, width: 0.470, height: 0.270 },
             ];
             
         default:
@@ -671,7 +726,7 @@ function setupDownloadForm() {
     downloadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const userName = nameInput.value.trim() || 'VSA-Student';
+        const userName = nameInput.value.trim();
         await downloadCompositeImage(userName);
     });
 }
@@ -689,17 +744,10 @@ async function downloadCompositeImage(userName) {
             throw new Error('No composite image found');
         }
         
-        // Create filename with timestamp
-        const timestamp = new Date().toLocaleString('en-US', {
-            year: 'numeric',
-            month: '2-digit', 
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        }).replace(/[/,:]/g, '-').replace(/\s/g, '_');
-        
-        const filename = `${userName}_at Boba&Brew.png`;
+        const safeName = userName.replace(/[<>:"/\\|?*]/g, '').trim();
+        const filename = safeName
+            ? `${safeName}'s VSA Wedding Photos.png`
+            : 'VSA Wedding Photos.png';
         
         compositeCanvas.toBlob((blob) => {
             const link = document.createElement('a');
@@ -718,10 +766,6 @@ async function downloadCompositeImage(userName) {
             sessionStorage.setItem('userName', userName);
             sessionStorage.setItem('downloadTime', new Date().toISOString());
             
-            setTimeout(() => {
-                showCompletionOptions();
-            }, 1500);
-            
         }, 'image/png', 0.9);
         
     } catch (error) {
@@ -738,28 +782,4 @@ function showDownloadStatus(message, type) {
     
     downloadStatus.textContent = message;
     downloadStatus.className = `download-status ${type}`;
-}
-
-function showCompletionOptions() {
-    const downloadSection = document.querySelector('.download-section');
-    if (!downloadSection) return;
-    
-    const completionDiv = document.createElement('div');
-    completionDiv.className = 'completion-options';
-    completionDiv.innerHTML = `
-        <div class="completion-message">
-            <h3>🎉 Photo Saved!</h3>
-            <p>The photo is now in your Downloads folder and ready to AirDrop to the student!</p>
-        </div>
-        <div class="completion-actions">
-            <button class="action-button primary" onclick="startOver()">
-                📸 Next Student
-            </button>
-            <button class="action-button secondary" onclick="goBackToFrames()">
-                🖼️ Try Different Frame
-            </button>
-        </div>
-    `;
-    
-    downloadSection.appendChild(completionDiv);
 }

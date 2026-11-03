@@ -19,17 +19,19 @@
             <!-- Download section -->
             <div class="download-section">
                 <h2>Save Your Photos</h2>
-                <p class="download-description">Click below to save your photobooth creation!</p>
+                <p class="download-description">Optionally add a name for the downloaded file, then select Download Photos.</p>
                 <form id="downloadForm" class="download-form">
                     <div class="download-input-group">
-                        <input 
-                            type="text"
-                            id="nameInput" 
-                            placeholder="Enter your name (optional)"
-                            maxlength="50"
-                        >
+                        <div class="download-name-field">
+                            <label class="download-name-label" for="nameInput">Photo filename (optional)</label>
+                            <input
+                                type="text"
+                                id="nameInput"
+                                placeholder="Enter a name"
+                                maxlength="50"
+                            >
+                        </div>
                         <button type="submit" class="download-button">
-                            <button color="red">
                             📸 Download Photos
                         </button>
                     </div>

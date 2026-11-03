@@ -11,7 +11,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-image: url("../assets/bakground/phototaker.png");
+    background-image: url("../assets/bakground/Orange and Green Illustrated Asian Food Presentation (1).png");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -24,14 +24,15 @@ h1 {
     font-weight: 700;
     color: #fff;
     text-shadow: 
-    4px 4px 0 #8b7355,
-    -2px -2px 0 #8b7355,
-    2px -2px 0 #8b7355,
-    -2px 2px 0 #8b7355,
+    4px 4px 0 #94352c,
+    -2px -2px 0 #94352c,
+    2px -2px 0 #94352c,
+    -2px 2px 0 #94352c,
     6px 6px 20px rgba(0,0,0,0.15);
     margin-bottom: 3rem;
     letter-spacing: 2px;
     line-height: 1.2;
+    text-align: center;
 }
 
 .container {
@@ -59,7 +60,8 @@ h1 {
 /* Theme and frame selection styles - BIGGER FRAMES */
 .theme-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 280px));
+    justify-content: center;
     gap: 30px;
     margin-bottom: 25px;
     max-width: 800px;
@@ -103,12 +105,13 @@ h1 {
     font-weight: 600;
     font-size: 20px;
     color: #333;
+    text-align: center;
 }
 
 .frame-grid {
     display: grid;
-    /* show four variants across on desktop */
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 280px));
+    justify-content: center;
     gap: 30px;
     margin-bottom: 25px;
     max-width: 1200px;
@@ -152,6 +155,7 @@ h1 {
     font-weight: 600;
     font-size: 16px;
     color: #333;
+    text-align: center;
 }
 
 /* Button styles matching phototaker.css */
@@ -263,7 +267,7 @@ button:disabled {
 
 /* Additional frame-specific styles */
 .frames-instruction {
-    color: #666;
+    color: #fff;
     font-size: 16px;
     margin-bottom: 20px;
     text-align: center;
@@ -274,10 +278,11 @@ button:disabled {
 }
 
 .variant-selection h2 {
-    color: #333;
+    color: #fff;
     font-size: 24px;
     margin-bottom: 15px;
     font-weight: 600;
+    text-align: center;
 }
 
 /* Responsive design */

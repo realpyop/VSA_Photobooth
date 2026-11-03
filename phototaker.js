@@ -129,7 +129,7 @@ function startCamera() {
         if (placeholder) {
             placeholder.style.display = 'none';
         }
-        
+
         setTimeout(function() {
             startCountdown();
         }, 2000);

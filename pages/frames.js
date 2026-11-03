@@ -123,7 +123,8 @@ function selectTheme(theme, skipScroll = false) {
 
     if (!variantGrid || !variantTitle || !themeSection || !variantSection) return;
 
-    variantTitle.textContent = theme === 'cafe' ? 'Cafe - Pick a Design' : 'Arcade - Pick a Design';
+    const themeTitle = theme === 'cafe' ? 'Cafe' : theme === 'wedding' ? 'Wedding' : 'Arcade';
+    variantTitle.textContent = `${themeTitle} - Pick a Design`;
     variantGrid.innerHTML = '';
     
     variants.forEach(v => {
